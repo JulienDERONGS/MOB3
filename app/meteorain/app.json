@@ -1,6 +1,5 @@
 {
   "expo": {
-    "entryPoint": "App.js",
     "name": "Meteorain",
     "description": "Meteo app for real men.",
     "slug": "meteorain",
