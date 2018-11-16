@@ -3,25 +3,57 @@ import { createStackNavigator } from 'react-navigation';
 import { Text, View, Button } from 'react-native';
 import { styles } from './src/styles/styles';
 
-/*export default class App extends React.Component {
-  render() {
-    return (
-      <View styles={styles.main}>
-        <Burger/>
-        <Text>Pouet</Text>
-      </View>
-    );
-  }
-}*/
 
-class GraphScreen extends React.Component {
+class GraphDayScreen extends React.Component {
   render() {
     return (
       <View style={styles.graph}>
-        <Text>Graph Screen</Text>
+        <Text>Day informations</Text>
         <Button
-          title="View uploaded files"
-          onPress={() => this.props.navigation.navigate('Upload')}
+          title="View Average"
+          onPress={() => this.props.navigation.navigate('Average')}
+        />
+      </View>
+    );
+  }
+}
+
+class GraphAverageScreen extends React.Component {
+  render() {
+    return (
+      <View style={styles.graph}>
+        <Text>Average / hour</Text>
+        <Button
+          title="View Full"
+          onPress={() => this.props.navigation.navigate('Full')}
+        />
+      </View>
+    );
+  }
+}
+
+class GraphFullScreen extends React.Component {
+  render() {
+    return (
+      <View style={styles.graph}>
+        <Text>Full Data</Text>
+        <Button
+          title="View Rose"
+          onPress={() => this.props.navigation.navigate('Rose')}
+        />
+      </View>
+    );
+  }
+}
+
+class GraphRoseScreen extends React.Component {
+  render() {
+    return (
+      <View style={styles.graph}>
+        <Text>Wind Rose</Text>
+        <Button
+          title="View uploaded files!"
+          onPress={() => this.props.navigation.push('Upload')}
         />
       </View>
     );
@@ -40,11 +72,14 @@ class UploadScreen extends React.Component {
 
 const RootStack = createStackNavigator(
   {
-    Graph: GraphScreen,
+    Day: GraphDayScreen,
+    Average: GraphAverageScreen,
+    Full: GraphFullScreen,
+    Rose: GraphRoseScreen,
     Upload: UploadScreen,
   },
   {
-    initialRouteName: 'Graph',
+    initialRouteName: 'Day',
   }
 );
 
