@@ -1,21 +1,55 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { createStackNavigator } from 'react-navigation';
+import { Text, View, Button } from 'react-native';
+import { styles } from './src/styles/styles';
 
-export default class App extends React.Component {
+/*export default class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
+      <View styles={styles.main}>
+        <Burger/>
+        <Text>Pouet</Text>
+      </View>
+    );
+  }
+}*/
+
+class GraphScreen extends React.Component {
+  render() {
+    return (
+      <View style={styles.graph}>
+        <Text>Graph Screen</Text>
+        <Button
+          title="View uploaded files"
+          onPress={() => this.props.navigation.navigate('Upload')}
+        />
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+class UploadScreen extends React.Component {
+  render() {
+    return (
+      <View style={styles.upload}>
+        <Text>Upload Screen</Text>
+      </View>
+    );
+  }
+}
+
+const RootStack = createStackNavigator(
+  {
+    Graph: GraphScreen,
+    Upload: UploadScreen,
   },
-});
+  {
+    initialRouteName: 'Graph',
+  }
+);
+
+export default class App extends React.Component {
+  render() {
+    return <RootStack />;
+  }
+}
