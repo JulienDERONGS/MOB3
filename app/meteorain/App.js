@@ -3,6 +3,7 @@ import { createStackNavigator } from 'react-navigation';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { Text, View, Button } from 'react-native';
 import { styles } from './src/styles/styles';
+import { DocumentPicker, FileSystem } from 'expo'
 
 
 class GraphDayScreen extends React.Component {
@@ -66,8 +67,36 @@ class UploadScreen extends React.Component {
     return (
       <View style={styles.upload}>
         <Text>Upload Screen</Text>
+        <Button 
+          title="Upload a new file"
+          onPress={ this.pickDocument }
+        />
       </View>
     );
+  }
+
+  pickDocument = async () => {
+    let result = await DocumentPicker.getDocumentAsync({});
+
+    if (result.type == 'cancel') {
+      alert("Aucun Fichier n'a été renseigné !");
+    }
+    else {
+      var InfosSaved = {};
+      contentToUp = await FileSystem.readAsStringAsync(result.uri);
+      contentToUp = contentToUp.split("\n")
+      InfosSaved.stationName = contentToUp[0];
+      InfosSaved.lineNumber = contentToUp.length - 2;
+      InfosSaved.columns = contentToUp[1].split("\t");
+      InfosSaved.lines = [];
+      for (i = 2; i < contentToUp.length; i++)
+      {
+        lineIdx = i - 2;
+        temp = contentToUp[i].split("\t");
+        InfosSaved.lines[lineIdx] = temp;
+      }
+      console.log(InfosSaved.lines[0]);
+    }
   }
 }
 
