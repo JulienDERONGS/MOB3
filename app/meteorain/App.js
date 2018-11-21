@@ -104,6 +104,7 @@ class UploadScreen extends React.Component {
       InfosSaved.stationName = contentToUp[0];
       InfosSaved.lineNumber = contentToUp.length - 2;
       InfosSaved.columns = contentToUp[1].split("\t");
+      InfosSaved.toProcess = true;
       InfosSaved.storageIndex = contentToUp[2].split("\t")[0].replace(" ", "_").split("_")[0];
       InfosJson = JSON.stringify(InfosSaved);
 
