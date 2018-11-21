@@ -2,10 +2,8 @@ import React from 'react';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { Text, View, Button } from 'react-native';
 import { styles } from './src/styles/styles';
+import { navBar } from './src/styles/navBar';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-
-const activeTintLabelColor = '#005555';
-const inactiveTintLabelColor = '#808080';
 
 class UploadScreen extends React.Component {
   render() {
@@ -78,46 +76,53 @@ const BottomNav = createMaterialBottomTabNavigator(
     Upload: {
       screen: UploadScreen,
       navigationOptions: {
-        tabBarLabel: <Text style={{ fontSize: 10, color: activeTintLabelColor }}> Uploaded files </Text>,
+        tabBarLabel: <Text style={{ fontSize: 10, color: navBar.activeColor }}> Uploaded files </Text>,
         tabBarIcon: ({ focused }) => (
-          <MaterialCommunityIcons name='format-list-bulleted' color={focused ? activeTintLabelColor : inactiveTintLabelColor} size={24} />
+          <MaterialCommunityIcons name='file-upload-outline' color={focused ? navBar.activeColor : navBar.inactiveColor} size={24} />
         )
       }
     },
     Day: {
       screen: GraphDayScreen,
+      navigationOptions: {
+        tabBarLabel: <Text style={{ fontSize: 10, color: navBar.activeColor }}> Day informations </Text>,
+        tabBarIcon: ({ focused }) => (
+          <MaterialCommunityIcons name='grid' color={focused ? navBar.activeColor : navBar.inactiveColor} size={24} />
+        )
+      }
     },
     Average: {
       screen: GraphAverageScreen,
+      navigationOptions: {
+        tabBarLabel: <Text style={{ fontSize: 10, color: navBar.activeColor }}> Average by hour </Text>,
+        tabBarIcon: ({ focused }) => (
+          <MaterialCommunityIcons name='tilde' color={focused ? navBar.activeColor : navBar.inactiveColor} size={24} />
+        )
+      }
     },
     Full: {
       screen: GraphFullScreen,
+      navigationOptions: {
+        tabBarLabel: <Text style={{ fontSize: 10, color: navBar.activeColor }}> Full data </Text>,
+        tabBarIcon: ({ focused }) => (
+          <MaterialCommunityIcons name='filter-outline' color={focused ? navBar.activeColor : navBar.inactiveColor} size={24} />
+        )
+      }
     },
     Rose: {
       screen: GraphRoseScreen,
+      navigationOptions: {
+        tabBarLabel: <Text style={{ fontSize: 10, color: navBar.activeColor }}> Wind rose </Text>,
+        tabBarIcon: ({ focused }) => (
+          <MaterialCommunityIcons name='weather-windy' color={focused ? navBar.activeColor : navBar.inactiveColor} size={24} />
+        )
+      }
     },
   },
   {
     shifting: true,
     initialRouteName: 'Upload',
-    //activeColor: '#f0edf6',
-    //inactiveColor: '#3e2465',
-    activeTintColor: '#ffffff',
-    inactiveTintColor: '#2f2f2f2f',
-    barStyle: { backgroundColor: '#694fad' },
-
-    /*navigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, horizontal, tintColor }) => {
-        const { routeName } = navigation.state;
-        let iconName;
-        if (routeName === 'Upload') {
-          iconName = `add-circle-outline'${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Settings') {
-          iconName = `ios-options${focused ? '' : '-outline'}`;
-        }
-        return <Ionicons name={iconName} size={horizontal ? 20 : 25} color={tintColor} />;
-      },
-    }),*/
+    barStyle: { backgroundColor: '#9e9a75' },
   }
 );
 
