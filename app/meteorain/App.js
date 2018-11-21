@@ -1,9 +1,10 @@
 import React from 'react';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { Text, View, Button } from 'react-native';
 import { styles } from './src/styles/styles';
 import { navBar } from './src/styles/navBar';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
+import { Graph } from './src/components/Graph';
 
 class UploadScreen extends React.Component {
   render() {
@@ -13,6 +14,7 @@ class UploadScreen extends React.Component {
           title='Upload a file'
           onPress={() => this.props.navigation.navigate('TODO')}
         />
+        <Graph graphType='spline'></Graph>
       </View>
     );
   }

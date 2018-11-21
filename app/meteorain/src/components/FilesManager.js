@@ -1,6 +1,6 @@
 import { DocumentPicker } from 'expo';
 
-export class filesManager extends React.Component {
+export class FilesManager extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
