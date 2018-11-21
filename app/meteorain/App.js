@@ -1,10 +1,9 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
-import { AsyncStorage, Text, View, Button } from 'react-native';
+import { AsyncStorage, FlatList, Text, View, Button } from 'react-native';
 import { styles } from './src/styles/styles';
 import { DocumentPicker, FileSystem } from 'expo'
-
 
 class GraphDayScreen extends React.Component {
   render() {
@@ -63,6 +62,15 @@ class GraphRoseScreen extends React.Component {
 }
 
 class UploadScreen extends React.Component {
+  constructor(props)
+  {
+    super(props);
+    this.state = {
+      keys : [],
+    };
+    this.getDocuments()
+    //AsyncStorage.clear()
+  }
   render() {
     return (
       <View style={styles.upload}>
@@ -71,9 +79,9 @@ class UploadScreen extends React.Component {
           title="Upload a new file"
           onPress={ this.pickDocument }
         />
-        <Button
-          title="See Uploaded files"
-          onPress={ this.getDocuments }
+        <FlatList
+          data={this.state.keys}
+          renderItem={({item}) => <Text>{item.key}</Text>}
         />
       </View>
     );
@@ -96,7 +104,7 @@ class UploadScreen extends React.Component {
       InfosSaved.stationName = contentToUp[0];
       InfosSaved.lineNumber = contentToUp.length - 2;
       InfosSaved.columns = contentToUp[1].split("\t");
-      InfosSaved.storageIndex = contentToUp[2].split("\t")[0].replace(" ", "_");
+      InfosSaved.storageIndex = contentToUp[2].split("\t")[0].replace(" ", "_").split("_")[0];
       InfosJson = JSON.stringify(InfosSaved);
 
       AsyncStorage.setItem(InfosSaved.storageIndex, InfosJson);
@@ -124,12 +132,21 @@ class UploadScreen extends React.Component {
         AsyncStorage.setItem(dataLines.storageCurrentIdx, dataLines.storageCurrentIdx);
       }
     }
+    this.getDocuments()
   }
 
   getDocuments = async() => {
-    var keys
-    keys = await AsyncStorage.getAllKeys()
-    console.log(keys)
+    keys = await AsyncStorage.getAllKeys();
+    ret = [];
+    for (Fkey of keys)
+    {
+      if (Fkey.indexOf("_line_") < 0)
+      {
+        ret.push({key : (new Date(Fkey)).toLocaleDateString() });
+      }
+    }
+    console.log(ret)
+    this.setState({keys : ret});
   }
 }
 
