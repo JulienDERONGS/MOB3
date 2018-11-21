@@ -1,10 +1,13 @@
 import React from 'react';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
+import Data from './src/helper/GraphData';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { Text, View, Button } from 'react-native';
 import { styles } from './src/styles/styles';
 import { navBar } from './src/styles/navBar';
 import { Graph } from './src/components/Graph';
+
+const GraphData = new Data;
 
 class UploadScreen extends React.Component {
   render() {
@@ -14,7 +17,6 @@ class UploadScreen extends React.Component {
           title='Upload a file'
           onPress={() => this.props.navigation.navigate('TODO')}
         />
-        <Graph graphType='spline'></Graph>
       </View>
     );
   }
@@ -25,10 +27,6 @@ class GraphDayScreen extends React.Component {
     return (
       <View style={styles.graph}>
         <Text>Day informations</Text>
-        <Button
-          title="View Average"
-          onPress={() => this.props.navigation.navigate('Average')}
-        />
       </View>
     );
   }
@@ -38,10 +36,11 @@ class GraphAverageScreen extends React.Component {
   render() {
     return (
       <View style={styles.graph}>
-        <Text>Average / hour</Text>
-        <Button
-          title="View Full"
-          onPress={() => this.props.navigation.navigate('Full')}
+        <Graph
+          graphData={GraphData.getData('average')}
+          type='spline'
+          name='Average by hour'
+          legend={true}
         />
       </View>
     );
@@ -52,10 +51,11 @@ class GraphFullScreen extends React.Component {
   render() {
     return (
       <View style={styles.graph}>
-        <Text>Full Data</Text>
-        <Button
-          title="View Rose"
-          onPress={() => this.props.navigation.navigate('Rose')}
+        <Graph
+          graphData={GraphData.getData('full')}
+          type='spline'
+          name='Full data'
+          legend={true}
         />
       </View>
     );
@@ -66,10 +66,11 @@ class GraphRoseScreen extends React.Component {
   render() {
     return (
       <View style={styles.graph}>
-        <Text>Wind Rose</Text>
-        <Button
-          title="View uploaded files!"
-          onPress={() => this.props.navigation.navigate('Upload')}
+        <Graph
+          graphData={GraphData.getData('rose')}
+          type='spline'
+          name='Wind rose'
+          legend={true}
         />
       </View>
     );
@@ -126,7 +127,7 @@ const BottomNav = createMaterialBottomTabNavigator(
   },
   {
     shifting: true,
-    initialRouteName: 'Upload',
+    initialRouteName: 'Average',
     barStyle: { backgroundColor: '#9e9a75' },
   }
 );

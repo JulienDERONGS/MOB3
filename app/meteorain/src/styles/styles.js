@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
     graph: {
         flex: 1,
         backgroundColor: '#ffffff',
-        alignItems: 'center',
+        //alignItems: 'center',
         justifyContent: 'center',
     },
     upload: {
