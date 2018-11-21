@@ -16,8 +16,10 @@ class UploadScreen extends React.Component {
     super(props);
     this.state = {
       keys : [],
+      current : "",
     };
     this.getDocuments()
+    this.getCurrentElement()
     //AsyncStorage.clear()
   }
   render() {
@@ -28,9 +30,10 @@ class UploadScreen extends React.Component {
           title="Upload a new file"
           onPress={ this.pickDocument }
         />
+        <Text> Current Element is : { this.state.current }</Text>
         <FlatList
           data={this.state.keys}
-          renderItem={({item}) => <Text>{item.key}</Text>}
+          renderItem={({item}) => <Button title = { item.key } onPress = { async() => { AsyncStorage.setItem('selected', item.key); this.getCurrentElement(); } } />}
         />
       </View>
     );
@@ -90,13 +93,18 @@ class UploadScreen extends React.Component {
     ret = [];
     for (Fkey of keys)
     {
-      if (Fkey.indexOf("_line_") < 0)
+      if (Fkey.indexOf("_line_") < 0 && Fkey != 'selected')
       {
-        ret.push({key : (new Date(Fkey)).toLocaleDateString() });
+        ret.push({key : Fkey});
       }
     }
-    console.log(ret)
     this.setState({keys : ret});
+  }
+
+  getCurrentElement = async() =>  {
+    cur = await AsyncStorage.getItem('selected');
+    console.log(cur);
+    this.setState( { current : cur });
   }
 }
 
