@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
-import { Text, View, Button } from 'react-native';
+import { AsyncStorage, Text, View, Button } from 'react-native';
 import { styles } from './src/styles/styles';
 import { DocumentPicker, FileSystem } from 'expo'
 
@@ -71,6 +71,10 @@ class UploadScreen extends React.Component {
           title="Upload a new file"
           onPress={ this.pickDocument }
         />
+        <Button
+          title="See Uploaded files"
+          onPress={ this.getDocuments }
+        />
       </View>
     );
   }
@@ -82,21 +86,50 @@ class UploadScreen extends React.Component {
       alert("Aucun Fichier n'a été renseigné !");
     }
     else {
-      var InfosSaved = {};
+      //chaine du contenu récupéré
       contentToUp = await FileSystem.readAsStringAsync(result.uri);
       contentToUp = contentToUp.split("\n")
+      
+      //infos a sauver dans le async storage
+      var InfosSaved = {};
+      
       InfosSaved.stationName = contentToUp[0];
       InfosSaved.lineNumber = contentToUp.length - 2;
       InfosSaved.columns = contentToUp[1].split("\t");
-      InfosSaved.lines = [];
-      for (i = 2; i < contentToUp.length; i++)
+      InfosSaved.storageIndex = contentToUp[2].split("\t")[0].replace(" ", "_");
+      InfosJson = JSON.stringify(InfosSaved);
+
+      AsyncStorage.setItem(InfosSaved.storageIndex, InfosJson);
+      line_persaves = 1000;
+      nbIndexes = parseInt(InfosSaved.lineNumber / line_persaves);
+      limit = 0;
+      for (h = 0; h < nbIndexes; h++) 
       {
-        lineIdx = i - 2;
-        temp = contentToUp[i].split("\t");
-        InfosSaved.lines[lineIdx] = temp;
+        limit = (h + 1) * line_persaves + 2;
+        iIdx = limit - line_persaves;
+        if (limit + line_persaves > InfosSaved.lineNumber)
+        {
+          limit = InfosSaved.lineNumber;
+        }
+
+        dataLines = {}
+        dataLines.storageBaseIdx = InfosSaved.storageIndex;
+        dataLines.storageCurrentIdx = InfosSaved.storageIndex + '_line_' + h;
+        dataLines.lines = [];
+        for (i = iIdx; i < limit; i++)
+        {
+          dataLines.lines.push(contentToUp[i].split("\t"));
+        }
+        InfosJson = JSON.stringify(dataLines);
+        AsyncStorage.setItem(dataLines.storageCurrentIdx, dataLines.storageCurrentIdx);
       }
-      console.log(InfosSaved.lines[0]);
     }
+  }
+
+  getDocuments = async() => {
+    var keys
+    keys = await AsyncStorage.getAllKeys()
+    console.log(keys)
   }
 }
 
