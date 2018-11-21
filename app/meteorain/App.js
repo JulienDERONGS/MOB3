@@ -9,7 +9,10 @@ class UploadScreen extends React.Component {
   render() {
     return (
       <View style={styles.upload}>
-        <Text>Upload Screen</Text>
+        <Button
+          title='Upload a file'
+          onPress={() => this.props.navigation.navigate('TODO')}
+        />
       </View>
     );
   }
