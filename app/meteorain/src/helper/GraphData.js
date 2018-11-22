@@ -123,6 +123,47 @@ export default class GraphData {
     }
 
     getDataFull = async() => {
+        datas = await this.getCurrentDatas();
+        if (datas.toProcess === true)
+        {
+            lines_persave = 1000;
+            nbIdx = datas.lineNumber / 1000;
+            listCols = [];
+            allDates = [];
+            for (cols of datas.columns)
+            {
+                obj = {};
+                obj.name = cols;
+                obj.datas = [];
+                if (cols != 'CREATEDATE') listCols.push(obj);
+            }
+            for (j = 0; j < nbIdx; j++)
+            {
+                datasLines = JSON.parse(await AsyncStorage.getItem(datas.storageIndex + '_line_' + j))
+                if (datasLines != null) 
+                {
+                    for (lines of datasLines.lines)
+                    {
+                        i = 1;
+                        allDates.push(lines[0]);
+                        for (cols of listCols)
+                        {
+                            if (typeof(lines[i] !== 'undefined'))
+                            {
+                                if (lines[i] === ' ')
+                                {
+                                    lines[i] = 0;
+                                }
+                                cols.datas.push(parseFloat(lines[i]));
+                            }
+                            i++;
+                        }
+                    }
+                }
+            }
+            res = JSON.stringify({ cols : listCols, dateList : allDates })
+            await AsyncStorage.setItem(datas.storageIndex + "_avg_full", res);
+        }
         return [
             {
                 name: 'Installation',
@@ -143,7 +184,52 @@ export default class GraphData {
         ]
     }
 
-    getDataRose() {
+    getDataRose = async() => {
+        datas = await this.getCurrentDatas();
+        if (datas.toProcess === true)
+        {
+            lines_persave = 1000;
+            nbIdx = datas.lineNumber / 1000;
+            listDir = [{ nb : 8, total : 0, posLength : 360 / 8, hits : []}, { nb : 16, total : 0,  posLength : 360 / 16, hits : []},{ nb : 32, total : 0,  posLength : 360 / 32, hits : []}];
+            i = 0;
+            idx = i;
+            for (cols of datas.columns)
+            {
+                if (cols === 'LOCAL_WD_2MIN_MNM')
+                {
+                    idx = i;
+                    break;
+                }
+                i++
+            }
+            for (j = 0; j < nbIdx; j++)
+            {
+                datasLines = JSON.parse(await AsyncStorage.getItem(datas.storageIndex + '_line_' + j))
+                if (datasLines != null) 
+                {
+                    for (lines of datasLines.lines)
+                    {
+                        if (typeof(lines[idx]) != 'undefined')
+                        {
+                            if (lines[i] === ' ')
+                            {
+                                lines[i] = 0;
+                            }
+                            for (dir of listDir)
+                            {
+                                rosePos = parseInt(lines[idx] / dir.posLength);
+                                if (typeof(dir.hits[rosePos]) !== 'undefined') dir.hits[rosePos]++;
+                                else dir.hits[rosePos] = 1;
+                                dir.total++;
+                            }
+                        }   
+                    }
+                }
+            }
+            res = JSON.stringify(listDir);
+            console.log(listDir)
+            await AsyncStorage.setItem(datas.storageIndex + "_avg_rose", res);
+        }
         return [
             {
                 name: 'Installation',
