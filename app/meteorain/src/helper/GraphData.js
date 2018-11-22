@@ -43,49 +43,50 @@ export default class GraphData {
                         i = 1;
                         for (cols of listCols)
                         {
-                            if (lines[i] != ' ')
+                            if (lines[i] === ' ')
                             {
-                                lines[i] = parseFloat(lines[i])
-                                if (cols.dayMin == -1 || cols.dayMin > lines[i])
-                                {
-                                    cols.dayMin = lines[i];  
-                                }
-                                if (cols.dayMax == -1 || cols.dayMax < lines[i])
-                                {
-                                    cols.dayMax = lines[i];
-                                }
-                                if (cols.dayAvg == -1)
-                                {
-                                    cols.dayAvg = lines[i];
-                                    cols.length++; 
-                                }
-                                else
-                                {
-                                    cols.dayAvg += lines[i];
-                                    cols.length++;
-                                }
-                                if (typeof(cols.hoursMin[curHour]) === 'undefined' || cols.hoursMin[curHour] == null)
-                                {
-                                    cols.hoursMin[curHour] = lines[i];
-                                    cols.hoursMax[curHour] = lines[i];
-                                    cols.hoursAvg[curHour] = lines[i];
-                                    cols.hoursCount[curHour] = 1;
-                                }
-                                else if (typeof(lines[i]) !== 'undefined')
-                                {
-                                    if (cols.hoursMin[curHour] == -1 || cols.hoursMin[curHour] > lines[i])
-                                    {
-                                        cols.hoursMin[curHour] = lines[i];  
-                                    }
-                                    if (cols.hoursMax[curHour] == -1 || cols.hoursMax[curHour] < lines[i])
-                                    {
-                                        cols.hoursMax[curHour] = lines[i];
-                                    }
-                                    cols.hoursAvg[curHour] += lines[i];
-                                    cols.hoursCount[curHour]++;
-                                }
-                                i++;
+                                lines[i] = 0;
                             }
+                            lines[i] = parseFloat(lines[i])
+                            if (cols.dayMin == -1 || cols.dayMin > lines[i])
+                            {
+                                cols.dayMin = lines[i];  
+                            }
+                            if (cols.dayMax == -1 || cols.dayMax < lines[i])
+                            {
+                                cols.dayMax = lines[i];
+                            }
+                            if (cols.dayAvg == -1)
+                            {
+                                cols.dayAvg = lines[i];
+                                cols.length++; 
+                            }
+                            else
+                            {
+                                cols.dayAvg += lines[i];
+                                cols.length++;
+                            }
+                            if (typeof(cols.hoursMin[curHour]) === 'undefined' || cols.hoursMin[curHour] == null)
+                            {
+                                cols.hoursMin[curHour] = lines[i];
+                                cols.hoursMax[curHour] = lines[i];
+                                cols.hoursAvg[curHour] = lines[i];
+                                cols.hoursCount[curHour] = 1;
+                            }
+                            else if (typeof(lines[i]) !== 'undefined')
+                            {
+                                if (cols.hoursMin[curHour] == -1 || cols.hoursMin[curHour] > lines[i])
+                                {
+                                    cols.hoursMin[curHour] = lines[i];  
+                                }
+                                if (cols.hoursMax[curHour] == -1 || cols.hoursMax[curHour] < lines[i])
+                                {
+                                    cols.hoursMax[curHour] = lines[i];
+                                }
+                                cols.hoursAvg[curHour] += lines[i];
+                                cols.hoursCount[curHour]++;
+                            }
+                            i++;
                         }
                     }
                 }
