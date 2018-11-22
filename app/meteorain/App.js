@@ -5,8 +5,9 @@ import { createMaterialBottomTabNavigator } from 'react-navigation-material-bott
 import { styles } from './src/styles/styles';
 import { navBar } from './src/styles/navBar';
 import { Graph } from './src/components/Graph';
-import { AsyncStorage, FlatList, Text, View, Button } from 'react-native';
+import { AsyncStorage, Button, FlatList, ScrollView, StyleSheet, Text, View   } from 'react-native';
 import { DocumentPicker, FileSystem } from 'expo'
+import { Table, Row, Rows } from 'react-native-table-component';
 
 const GraphData = new Data;
 
@@ -29,6 +30,9 @@ class UploadScreen extends React.Component {
         <Button 
           title="Upload a new file"
           onPress={ this.pickDocument }
+        />
+        <Button title="Clear All"
+          onPress = { async() => { AsyncStorage.clear(); this.getDocuments(); this.getCurrentElement() }}
         />
         <Text> Current Element is : { this.state.current }</Text>
         <FlatList
@@ -82,7 +86,7 @@ class UploadScreen extends React.Component {
           dataLines.lines.push(contentToUp[i].split("\t"));
         }
         InfosJson = JSON.stringify(dataLines);
-        AsyncStorage.setItem(dataLines.storageCurrentIdx, dataLines.storageCurrentIdx);
+        AsyncStorage.setItem(dataLines.storageCurrentIdx, InfosJson);
       }
     }
     this.getDocuments()
@@ -103,18 +107,68 @@ class UploadScreen extends React.Component {
 
   getCurrentElement = async() =>  {
     cur = await AsyncStorage.getItem('selected');
-    console.log(cur);
     this.setState( { current : cur });
   }
 }
 
 class GraphDayScreen extends React.Component {
+  constructor(props)
+  {
+    super(props);
+    this.state = {
+      current : "",
+      tableHead: [],
+      tableData: [],
+      widthArr : []
+    }
+    this.styles = StyleSheet.create({
+      container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
+      head: { height: 40, backgroundColor: '#f1f8ff' },
+      text: { margin: 6 }
+    });
+    //this.getDocuments()
+    this.getCurrentElement()
+    //AsyncStorage.clear()
+  }
   render() {
     return (
-      <View style={styles.graph}>
-        <Text>Day informations</Text>
+      <View style={this.styles.graph}>
+        <Text>Day informations of : { this.state.current }</Text>
       </View>
     );
+  }
+  getCurrentElement = async() =>  {
+    cur = await AsyncStorage.getItem('selected');
+    if (cur != "")
+    {
+      ObjBase = await AsyncStorage.getItem(cur);
+      ObjBase = JSON.parse(ObjBase);
+      widthArray = [];
+      for (i = 0; i < ObjBase.columns.length; i++)
+      {
+        widthArray.push(150)
+      }
+
+      line_persaves = 1000;
+      nbIndexes = parseInt(ObjBase.lineNumber / line_persaves);
+      tableDatas = [];
+      for(i = 0; i < 2; i++)
+      {
+        idx = cur + '_line_' + i;
+        ObjCurr = await AsyncStorage.getItem(idx);
+        ObjCurr = JSON.parse(ObjCurr)
+        for (obj of ObjCurr.lines)
+        {
+          tableDatas.push(obj)
+        }
+      }
+    }
+    this.setState({ 
+      current : cur,
+      tableHead : ObjBase.columns,
+      tableData : tableDatas,
+      widthArr : widthArray
+    });
   }
 }
 
@@ -123,7 +177,7 @@ class GraphAverageScreen extends React.Component {
     return (
       <View style={styles.graph}>
         <Graph
-          graphData={GraphData.getData('average')}
+          graphData={GraphData.getDataAverrage() }
           type='spline'
           name='Average by hour'
           legend={true}
@@ -138,7 +192,7 @@ class GraphFullScreen extends React.Component {
     return (
       <View style={styles.graph}>
         <Graph
-          graphData={GraphData.getData('full')}
+          graphData={GraphData.getDataFull() }
           type='spline'
           name='Full data'
           legend={true}
@@ -153,7 +207,7 @@ class GraphRoseScreen extends React.Component {
     return (
       <View style={styles.graph}>
         <Graph
-          graphData={GraphData.getData('rose')}
+          graphData={GraphData.getDataRose()}
           type='spline'
           name='Wind rose'
           legend={true}
