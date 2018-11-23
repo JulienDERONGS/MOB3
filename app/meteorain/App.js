@@ -5,6 +5,7 @@ import { createMaterialBottomTabNavigator } from 'react-navigation-material-bott
 import { styles } from './src/styles/styles';
 import { navBar } from './src/styles/navBar';
 import { Graph } from './src/components/Graph';
+import { GraphRose } from './src/components/GraphRose';
 import { AsyncStorage, Button, FlatList, ScrollView, StyleSheet, Text, View   } from 'react-native';
 import { DocumentPicker, FileSystem } from 'expo'
 import { Table, Row, Rows } from 'react-native-table-component';
@@ -208,6 +209,7 @@ class GraphRoseScreen extends React.Component {
     super(props);
     this.state = {
       nbDir : "Tap me to select data",
+      datas : {}
     };
     this.getNbDir()
   }
@@ -218,9 +220,8 @@ class GraphRoseScreen extends React.Component {
         <Button title = { this.state.nbDir } onPress= { this.setNbDir }/>
       </View>
       <View>
-        <Graph
-            graphData={GraphData.getDataRose()}
-            type='spline'
+        <GraphRose
+            nbDir={ this.state.nbDir }
             name='Wind rose'
             legend={true}
           />
@@ -228,7 +229,6 @@ class GraphRoseScreen extends React.Component {
       </ScrollView>
     );
   }
-
   getNbDir = async() => {
     param = await AsyncStorage.getItem('RoseParam');
     if (param == null)
@@ -249,6 +249,7 @@ class GraphRoseScreen extends React.Component {
 
     await AsyncStorage.setItem('RoseParam', newParam);
     this.setState({ nbDir : newParam });
+    //this.getSelectedDatas()
   }
 }
 
