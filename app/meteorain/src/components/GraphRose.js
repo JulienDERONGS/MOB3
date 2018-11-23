@@ -17,15 +17,15 @@ export class GraphRose extends React.Component {
     }
 
     getCategories = async() => {
-        if (this.state.graphData.nb == 8)
+        if (this.props.nbDir == 8)
         {
             this.setState({categories : ["N", "NE", "E", "SE", "S", "Sw", "w", "Nw"]})
         }
-        if (this.state.graphData.nb == 16)
+        if (this.props.nbDir == 16)
         {
             this.setState({categories : ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']})
         }
-        if (this.state.graphData.nb == 32)
+        if (this.props.nbDir == 32)
         {
             this.setState({categories : ['N', 'NNNE', 'NNE', 'NE', 'ENE', 'EENE', 'EEENE','E', 'EEESE', 'EESE', 'ESE', 'SE', 'SSE', 'SSSE', 'SSSSE', 'S', 'SSSSW', 'SSSW', 'SSW', 'SW', 'WSW', 'WWSW', 'WWWSW','W', 'WWNW', 'WNW', 'NW','NNW', 'NNNW', 'NNNNW']})
         }
@@ -34,13 +34,13 @@ export class GraphRose extends React.Component {
        
         var Highcharts='Highcharts';
         
-        console.log(this.state.graphData)
+        console.log(this.state.categories)
         var conf={
                 series: [{
                     data: this.state.graphData.series
                 }],
                 chart: {
-                    polar: true,
+                    polar: false,
                     type: 'column',
                     marginRight: 10,
                 },
@@ -48,10 +48,9 @@ export class GraphRose extends React.Component {
                     text: this.props.name
                 },
                 xAxis: {
-                    min: 0,
-                    max: 360,
                     tickmarkPlacement: 'on',
-                    categories: this.categories
+                    categories : this.state.categories
+                    
                 },
                 yAxis: {
                     min: 0,
@@ -126,11 +125,11 @@ export class GraphRose extends React.Component {
         {
             cleanData[i] = [i * (360 / this.props.nbDir), fdata[i]];
         }
-        console.log(cleanData)
         this.setState({ graphData : {  
           series : cleanData,
           nb : this.props.nbDir,
           length : 360 / this.props.nbDir }
         });
+        console.log(this.state)
       }
 }

@@ -150,7 +150,7 @@ export default class GraphData {
     getDataRose = async() => {
         datas = await this.getCurrentDatas();
         allreadyGet = await AsyncStorage.getItem(datas.storageIndex + "_rose");
-        if (datas.toProcess === true && allreadyGet != null)
+        if (datas.toProcess === true && allreadyGet == null)
         {
             lines_persave = 1000;
             nbIdx = datas.lineNumber / 1000;
