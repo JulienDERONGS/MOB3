@@ -177,7 +177,7 @@ class GraphAverageScreen extends React.Component {
     return (
       <View style={styles.graph}>
         <Graph
-          graphData={GraphData.getDataAverrage() }
+          graphData={ [] }
           type='spline'
           name='Average by hour'
           legend={true}
@@ -192,7 +192,7 @@ class GraphFullScreen extends React.Component {
     return (
       <View style={styles.graph}>
         <Graph
-          graphData={GraphData.getDataFull() }
+          graphData={ [] }
           type='spline'
           name='Full data'
           legend={true}
@@ -207,7 +207,7 @@ class GraphRoseScreen extends React.Component {
   {
     super(props);
     this.state = {
-      nbDir : 0,
+      nbDir : "Tap me to select data",
     };
     this.getNbDir()
   }
@@ -215,7 +215,7 @@ class GraphRoseScreen extends React.Component {
     return (
       <ScrollView>
       <View>
-        <Button title = { this.state.nbDir.toString() } onPress= { async() => { this.setNbDir() } }/>
+        <Button title = { this.state.nbDir } onPress= { this.setNbDir }/>
       </View>
       <View>
         <Graph
@@ -233,18 +233,19 @@ class GraphRoseScreen extends React.Component {
     param = await AsyncStorage.getItem('RoseParam');
     if (param == null)
     {
-      AsyncStorage.setItem('RoseParam', 16)
-      param = 16
+      AsyncStorage.setItem('RoseParam', "16")
+      param = "16";
     }
     this.setState({ nbDir : param });
   }
 
   setNbDir = async() => {
-    param = await this.getNbDir()
+    param = this.state.nbDir
+    newParam = "";
 
-    if (param == 8) newParam = 16;
-    if (param == 16) newParam = 32;
-    if (param == 32) newParam = 8;
+    if (param == "8") newParam = "16";
+    if (param == "16") newParam = "32";
+    if (param == "32") newParam = "8";
 
     await AsyncStorage.setItem('RoseParam', newParam);
     this.setState({ nbDir : newParam });

@@ -186,7 +186,8 @@ export default class GraphData {
 
     getDataRose = async() => {
         datas = await this.getCurrentDatas();
-        if (datas.toProcess === true)
+        allreadyGet = await AsyncStorage.getItem(datas.storageIndex + "_avg_rose");
+        if (datas.toProcess === true && allreadyGet != null)
         {
             lines_persave = 1000;
             nbIdx = datas.lineNumber / 1000;
@@ -224,6 +225,14 @@ export default class GraphData {
                             }
                         }   
                     }
+                }
+            }
+            //console.log(listDir);
+            for (dir of listDir)
+            {
+                for (i = 0; i < dir.nb; i++)
+                {
+                    dir.hits[i] = (parseInt(dir.hits[i]) / parseInt(dir.total)) * 100;
                 }
             }
             res = JSON.stringify(listDir);
