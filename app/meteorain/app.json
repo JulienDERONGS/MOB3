@@ -5,7 +5,9 @@
     "slug": "meteorain",
     "privacy": "unlisted",
     "sdkVersion": "31.0.0",
-    "platforms": ["android"],
+    "platforms": [
+      "android"
+    ],
     "version": "1.0.0",
     "orientation": "landscape",
     "icon": "./assets/icon.png",

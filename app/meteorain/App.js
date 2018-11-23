@@ -203,17 +203,51 @@ class GraphFullScreen extends React.Component {
 }
 
 class GraphRoseScreen extends React.Component {
+  constructor(props)
+  {
+    super(props);
+    this.state = {
+      nbDir : 0,
+    };
+    this.getNbDir()
+  }
   render() {
     return (
-      <View style={styles.graph}>
-        <Graph
-          graphData={GraphData.getDataRose()}
-          type='spline'
-          name='Wind rose'
-          legend={true}
-        />
+      <ScrollView>
+      <View>
+        <Button title = { this.state.nbDir.toString() } onPress= { async() => { this.setNbDir() } }/>
       </View>
+      <View>
+        <Graph
+            graphData={GraphData.getDataRose()}
+            type='spline'
+            name='Wind rose'
+            legend={true}
+          />
+      </View>
+      </ScrollView>
     );
+  }
+
+  getNbDir = async() => {
+    param = await AsyncStorage.getItem('RoseParam');
+    if (param == null)
+    {
+      AsyncStorage.setItem('RoseParam', 16)
+      param = 16
+    }
+    this.setState({ nbDir : param });
+  }
+
+  setNbDir = async() => {
+    param = await this.getNbDir()
+
+    if (param == 8) newParam = 16;
+    if (param == 16) newParam = 32;
+    if (param == 32) newParam = 8;
+
+    await AsyncStorage.setItem('RoseParam', newParam);
+    this.setState({ nbDir : newParam });
   }
 }
 

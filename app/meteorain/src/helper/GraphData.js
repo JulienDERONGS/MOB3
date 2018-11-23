@@ -227,7 +227,6 @@ export default class GraphData {
                 }
             }
             res = JSON.stringify(listDir);
-            console.log(listDir)
             await AsyncStorage.setItem(datas.storageIndex + "_avg_rose", res);
         }
         return [
